@@ -1,12 +1,15 @@
 <!-- WeatherComponent.vue -->
 <template>
-    <div>
+    <div class="max-w-2xl mx-auto p-6">
+        <h1 class="text-3xl font-bold text-center text-gray-800 mb-8">
+            Pronóstico del Tiempo
+        </h1>
         <MunicipioSelect
             :municipios="municipios"
             :selectedMunicipio="selectedMunicipio"
             @municipio-selected="handleMunicipioSelected"
         />
-        <WeatherDisplay :weather="weather" />
+        <WeatherDisplay v-if="weather" :weather="weather" />
     </div>
 </template>
 
@@ -32,7 +35,15 @@ export default {
 
         const handleMunicipioSelected = async (municipioId) => {
             selectedMunicipio.value = municipioId;
-            weather.value = await fetchTiempo(municipioId);
+            const weatherData = await fetchTiempo(municipioId);
+            if (weatherData) {
+                weather.value = {
+                    ...weatherData,
+                    municipio:
+                        municipios.value.find((m) => m.id === municipioId)
+                            ?.nombre || "",
+                };
+            }
         };
 
         return {
