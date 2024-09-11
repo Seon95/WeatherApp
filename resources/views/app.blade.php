@@ -9,7 +9,7 @@
 <body>
     <div id="app">
         <!-- Componente Vue que renderizará el select -->
-        <municipio-select></municipio-select>
+        <weather-component></weather-component>
     </div>
 </body>
 </html>
