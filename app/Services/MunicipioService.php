@@ -8,8 +8,13 @@ use Illuminate\Support\Facades\Cache;
 
 class MunicipioService
 {
-    protected $apiKey = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJtYXJvdWFuXzM5QGhvdG1haWwuY29tIiwianRpIjoiNjAxYmM3ZGYtY2I5NS00M2U5LTk2MmYtNGU5NGQxMWY0NTQ2IiwiaXNzIjoiQUVNRVQiLCJpYXQiOjE3MjU4MjEwNDksInVzZXJJZCI6IjYwMWJjN2RmLWNiOTUtNDNlOS05NjJmLTRlOTRkMTFmNDU0NiIsInJvbGUiOiIifQ.41pKSJ6k0kNCZN3JQptRs-GA1U4sQkf0npwyifVfShc';
+    protected $apiKey;
     protected $apiUrl = 'https://opendata.aemet.es/opendata/api/maestro/municipios';
+
+    public function __construct()
+    {
+        $this->apiKey = env('VITE_AEMET_API_KEY');
+    }
 
     public function getMunicipios()
     {
