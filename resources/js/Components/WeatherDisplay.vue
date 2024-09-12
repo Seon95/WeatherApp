@@ -2,7 +2,7 @@
     <div
         v-if="weather"
         :class="[
-            'p-6 rounded-lg shadow-xl max-w-lg mx-auto bg-gradient-to-br from-white to-blue-100',
+            'p-6 rounded-lg shadow-xl mx-auto bg-gradient-to-br from-white to-blue-100',
             weatherClass,
         ]"
     >
@@ -29,8 +29,27 @@
                 {{ weather.temperatura_min }}°C
             </span>
         </div>
-        <div class="text-center text-gray-800 text-lg">
+        <div class="text-center text-gray-800 text-lg mb-4">
             {{ weather.estado_cielo }}
+        </div>
+        <div class="flex justify-between mb-4">
+            <div
+                v-for="(
+                    probabilidad, periodo
+                ) in weather.probabilidad_precipitacion"
+                :key="periodo"
+                class="bg-white p-4 rounded-lg shadow-md flex flex-col items-center flex-1 mx-1"
+            >
+                <div class="w-12 h-12 mb-2 flex items-center justify-center">
+                    <i :class="getIcon(periodo)" class="text-3xl"></i>
+                </div>
+                <div class="text-gray-800 text-center">
+                    <h4 class="text-lg font-semibold">
+                        {{ formatPeriodo(periodo) }}
+                    </h4>
+                    <p class="text-xl font-bold">{{ probabilidad }}%</p>
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -69,10 +88,38 @@ export default {
             };
             return new Date(dateString).toLocaleDateString("es-ES", options);
         },
+        formatPeriodo(periodo) {
+            const periods = {
+                "00-06": "00h - 06h",
+                "06-12": "06h - 12h",
+                "12-18": "12h - 18h",
+                "18-24": "18h - 24h",
+            };
+            return periods[periodo] || periodo;
+        },
+        getIcon(periodo) {
+            const iconMap = {
+                "00-06": "fas fa-cloud-moon",
+                "06-12": "fas fa-cloud-sun",
+                "12-18": "fas fa-cloud-sun-rain",
+                "18-24": "fas fa-cloud-moon-rain",
+            };
+            return iconMap[periodo] || "fas fa-cloud";
+        },
     },
 };
 </script>
 
 <style scoped>
-/* Añadir estilos adicionales si es necesario */
+/* Asegúrate de que el contenedor flex ocupe el ancho completo y ajuste los elementos */
+.flex {
+    display: flex;
+    flex-wrap: nowrap; /* Asegúrate de que los elementos no se envuelvan */
+    overflow-x: auto; /* Agrega scroll horizontal si es necesario */
+}
+
+.flex > div {
+    flex: 1 1 auto; /* Permite que los elementos se estiren */
+    max-width: 150px; /* Ajusta el ancho máximo si es necesario */
+}
 </style>
