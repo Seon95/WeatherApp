@@ -1,29 +1,35 @@
-<!-- WeatherDisplay.vue -->
 <template>
     <div
         v-if="weather"
-        :class="['p-6 rounded-lg shadow-lg max-w-sm mx-auto', weatherClass]"
+        :class="[
+            'p-6 rounded-lg shadow-xl max-w-lg mx-auto bg-gradient-to-br from-white to-blue-100',
+            weatherClass,
+        ]"
     >
-        <h2 class="text-2xl font-bold text-white mb-2">
-            {{ weather.municipio }}
-        </h2>
-        <div class="text-sm text-gray-200 mb-4">
-            {{ formatDate(weather.fecha) }}
-        </div>
-        <div class="flex justify-between items-center mb-4">
-            <div class="text-5xl text-white">
-                <i :class="weatherIcon"></i>
+        <div class="flex items-center mb-4">
+            <div
+                class="flex-shrink-0 w-16 h-16 rounded-full bg-gray-200 flex items-center justify-center"
+            >
+                <i :class="weatherIcon" class="text-4xl text-gray-800"></i>
             </div>
-            <div class="text-right">
-                <span class="text-4xl font-bold text-white block"
-                    >{{ weather.temperatura_max }}°C</span
-                >
-                <span class="text-xl text-gray-200"
-                    >{{ weather.temperatura_min }}°C</span
-                >
+            <div class="ml-4">
+                <h2 class="text-4xl font-bold text-gray-800">
+                    {{ weather.municipio }}
+                </h2>
+                <div class="text-sm text-gray-600">
+                    {{ formatDate(weather.fecha) }}
+                </div>
             </div>
         </div>
-        <div class="text-center text-white text-lg">
+        <div class="text-center mb-6">
+            <span class="text-6xl font-bold text-gray-800 block">
+                {{ weather.temperatura_max }}°C
+            </span>
+            <span class="text-2xl text-gray-600">
+                {{ weather.temperatura_min }}°C
+            </span>
+        </div>
+        <div class="text-center text-gray-800 text-lg">
             {{ weather.estado_cielo }}
         </div>
     </div>
@@ -37,8 +43,8 @@ export default {
     computed: {
         weatherClass() {
             return this.weather.estado_cielo.toLowerCase().includes("lluvia")
-                ? "bg-gradient-to-br from-blue-500 to-blue-700"
-                : "bg-gradient-to-br from-yellow-400 to-orange-500";
+                ? "bg-gradient-to-br from-blue-300 to-blue-500"
+                : "bg-gradient-to-br from-yellow-200 to-yellow-400";
         },
         weatherIcon() {
             const iconMap = {
@@ -66,3 +72,7 @@ export default {
     },
 };
 </script>
+
+<style scoped>
+/* Añadir estilos adicionales si es necesario */
+</style>

@@ -1,15 +1,18 @@
-<!-- WeatherComponent.vue -->
 <template>
-    <div class="max-w-2xl mx-auto p-6">
-        <h1 class="text-3xl font-bold text-center text-gray-800 mb-8">
+    <div
+        class="bg-gradient-to-br from-blue-50 to-blue-200 min-h-screen p-8 flex flex-col items-center"
+    >
+        <h1 class="text-5xl font-extrabold text-gray-800 mb-12 text-center">
             Pronóstico del Tiempo
         </h1>
-        <MunicipioSelect
-            :municipios="municipios"
-            :selectedMunicipio="selectedMunicipio"
-            @municipio-selected="handleMunicipioSelected"
-        />
-        <WeatherDisplay v-if="weather" :weather="weather" />
+        <div class="w-full max-w-4xl">
+            <MunicipioSelect
+                :municipios="municipios"
+                :selectedMunicipio="selectedMunicipio"
+                @municipio-selected="handleMunicipioSelected"
+            />
+            <WeatherDisplay v-if="weather" :weather="weather" />
+        </div>
     </div>
 </template>
 
@@ -55,3 +58,7 @@ export default {
     },
 };
 </script>
+
+<style scoped>
+/* Añadir estilos adicionales si es necesario */
+</style>
