@@ -1,6 +1,6 @@
 <template>
     <div
-        class="bg-gradient-to-br from-blue-50 to-blue-200 min-h-screen p-8 flex flex-col items-center"
+        class="bg-gradient-to-br from-blue-100 to-blue-400 min-h-screen p-8 flex flex-col items-center"
     >
         <h1 class="text-5xl font-extrabold text-gray-800 mb-12 text-center">
             Pronóstico del Tiempo

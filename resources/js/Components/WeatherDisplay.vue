@@ -2,18 +2,18 @@
     <div
         v-if="weather"
         :class="[
-            'p-6 rounded-lg shadow-xl mx-auto bg-gradient-to-br from-white to-blue-100',
+            'p-6 rounded-lg shadow-xl mx-auto bg-gradient-to-br from-white to-purple-100',
             weatherClass,
         ]"
     >
-        <div class="flex items-center mb-4">
+        <div class="flex flex-wrap items-center mb-4">
             <div
-                class="flex-shrink-0 w-16 h-16 rounded-full bg-gray-200 flex items-center justify-center"
+                class="flex-shrink-0 w-16 h-16 rounded-full bg-gray-200 flex items-center justify-center mr-4 mb-2"
             >
                 <i :class="weatherIcon" class="text-4xl text-gray-800"></i>
             </div>
-            <div class="ml-4">
-                <h2 class="text-4xl font-bold text-gray-800">
+            <div class="flex-grow min-w-0">
+                <h2 class="text-4xl font-bold text-gray-800 truncate">
                     {{ weather.municipio }}
                 </h2>
                 <div class="text-sm text-gray-600">
@@ -32,13 +32,13 @@
         <div class="text-center text-gray-800 text-lg mb-4">
             {{ weather.estado_cielo }}
         </div>
-        <div class="flex justify-between mb-4">
+        <div class="flex justify-between overflow-x-auto pb-2">
             <div
                 v-for="(
                     probabilidad, periodo
                 ) in weather.probabilidad_precipitacion"
                 :key="periodo"
-                class="bg-white p-4 rounded-lg shadow-md flex flex-col items-center flex-1 mx-1"
+                class="bg-white p-4 rounded-lg shadow-md flex flex-col items-center flex-shrink-0 w-1/4 min-w-[120px] mx-1"
             >
                 <div class="w-12 h-12 mb-2 flex items-center justify-center">
                     <i :class="getIcon(periodo)" class="text-3xl"></i>
@@ -62,15 +62,15 @@ export default {
     computed: {
         weatherClass() {
             return this.weather.estado_cielo.toLowerCase().includes("lluvia")
-                ? "bg-gradient-to-br from-blue-300 to-blue-500"
-                : "bg-gradient-to-br from-yellow-200 to-yellow-400";
+                ? "bg-gradient-to-br from-purple-400 to-orange-500"
+                : "bg-gradient-to-br from-pink-200 to-yellow-300";
         },
         weatherIcon() {
             const iconMap = {
                 despejado: "fas fa-sun",
                 nuboso: "fas fa-cloud",
                 lluvia: "fas fa-cloud-rain",
-                // Añadir más mapeos según sea necesario
+                // Add more mappings as needed
             };
             return (
                 iconMap[this.weather.estado_cielo.toLowerCase()] ||
@@ -111,15 +111,33 @@ export default {
 </script>
 
 <style scoped>
-/* Asegúrate de que el contenedor flex ocupe el ancho completo y ajuste los elementos */
 .flex {
     display: flex;
-    flex-wrap: nowrap; /* Asegúrate de que los elementos no se envuelvan */
-    overflow-x: auto; /* Agrega scroll horizontal si es necesario */
+    flex-wrap: nowrap;
 }
 
-.flex > div {
-    flex: 1 1 auto; /* Permite que los elementos se estiren */
-    max-width: 150px; /* Ajusta el ancho máximo si es necesario */
+.overflow-x-auto {
+    overflow-x: auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(156, 163, 175, 0.5) transparent;
+}
+
+.overflow-x-auto::-webkit-scrollbar {
+    height: 6px;
+}
+
+.overflow-x-auto::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.overflow-x-auto::-webkit-scrollbar-thumb {
+    background-color: rgba(156, 163, 175, 0.5);
+    border-radius: 20px;
+}
+
+@media (max-width: 640px) {
+    .flex > div {
+        min-width: 100px;
+    }
 }
 </style>
