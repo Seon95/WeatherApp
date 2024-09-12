@@ -26,6 +26,27 @@ export async function fetchTiempo(municipioId) {
 
             if (tiempoData && tiempoData.length > 0) {
                 const prediccion = tiempoData[0].prediccion.dia[0];
+
+                // Extraer la probabilidad de precipitación para cada período
+                const probPrecipitacionPorPeriodo = {
+                    "00-06":
+                        prediccion.probPrecipitacion.find(
+                            (periodo) => periodo.periodo === "00-06"
+                        )?.value || 0,
+                    "06-12":
+                        prediccion.probPrecipitacion.find(
+                            (periodo) => periodo.periodo === "06-12"
+                        )?.value || 0,
+                    "12-18":
+                        prediccion.probPrecipitacion.find(
+                            (periodo) => periodo.periodo === "12-18"
+                        )?.value || 0,
+                    "18-24":
+                        prediccion.probPrecipitacion.find(
+                            (periodo) => periodo.periodo === "18-24"
+                        )?.value || 0,
+                };
+
                 return {
                     fecha: prediccion.fecha,
                     temperatura_min: prediccion.temperatura.minima,
@@ -34,6 +55,7 @@ export async function fetchTiempo(municipioId) {
                         prediccion.estadoCielo.find(
                             (periodo) => periodo.periodo === "00-24"
                         )?.descripcion || "No disponible",
+                    probabilidad_precipitacion: probPrecipitacionPorPeriodo,
                 };
             }
         }
