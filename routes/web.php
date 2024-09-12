@@ -4,6 +4,10 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use App\Http\Controllers\MunicipioController;
+use App\Http\Controllers\TiempoController;
+
+
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -24,7 +28,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-use App\Http\Controllers\MunicipioController;
 
 Route::get('/municipios', [MunicipioController::class, 'index']);
+Route::get('/tiempo/{municipioId}', [TiempoController::class, 'getTiempo']);
 require __DIR__ . '/auth.php';
