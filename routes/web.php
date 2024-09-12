@@ -27,4 +27,5 @@ Route::middleware('auth')->group(function () {
 use App\Http\Controllers\MunicipioController;
 
 Route::get('/municipios', [MunicipioController::class, 'index']);
+
 require __DIR__ . '/auth.php';

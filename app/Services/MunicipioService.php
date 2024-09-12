@@ -3,6 +3,8 @@
 namespace App\Services;
 
 use Illuminate\Support\Facades\Http;
+use App\Models\Municipio;
+use Illuminate\Support\Facades\Cache;
 
 class MunicipioService
 {
@@ -10,6 +12,26 @@ class MunicipioService
     protected $apiUrl = 'https://opendata.aemet.es/opendata/api/maestro/municipios';
 
     public function getMunicipios()
+    {
+        return Cache::remember('municipios', 60 * 24, function () {
+            $municipiosDB = Municipio::all();
+
+            if ($municipiosDB->isEmpty()) {
+                $municipiosAPI = $this->getMunicipiosFromAPI();
+
+                if (!isset($municipiosAPI['error'])) {
+                    Municipio::insert($municipiosAPI);
+                    return $municipiosAPI;
+                }
+
+                return $municipiosAPI;
+            }
+
+            return $municipiosDB;
+        });
+    }
+
+    private function getMunicipiosFromAPI()
     {
         try {
             // Paso 1: Obtener la URL de los datos
