@@ -9,11 +9,12 @@ use Illuminate\Support\Facades\Cache;
 class MunicipioService
 {
     protected $apiKey;
-    protected $apiUrl = 'https://opendata.aemet.es/opendata/api/maestro/municipios';
+    protected $municipiosApiUrl = 'https://opendata.aemet.es/opendata/api/maestro/municipios';
+    protected $tiempoApiUrl = 'https://opendata.aemet.es/opendata/api/prediccion/especifica/municipio/diaria/';
 
     public function __construct()
     {
-        $this->apiKey = env('VITE_AEMET_API_KEY');
+        $this->apiKey = env('AEMET_API_KEY');  // Usamos la variable del entorno
     }
 
     public function getMunicipios()
@@ -39,10 +40,9 @@ class MunicipioService
     private function getMunicipiosFromAPI()
     {
         try {
-            // Paso 1: Obtener la URL de los datos
             $response = Http::withHeaders([
                 'api_key' => $this->apiKey
-            ])->get($this->apiUrl);
+            ])->get($this->municipiosApiUrl);
 
             if (!$response->successful()) {
                 throw new \Exception('Error al obtener la URL de los datos: ' . $response->status());
@@ -56,48 +56,73 @@ class MunicipioService
 
             $municipiosUrl = $data['datos'];
 
-            // Paso 2: Obtener los datos de los municipios
             $municipiosResponse = Http::get($municipiosUrl);
 
             if (!$municipiosResponse->successful()) {
                 throw new \Exception('Error al obtener los datos de municipios: ' . $municipiosResponse->status());
             }
 
-            $responseBody = $municipiosResponse->body();
+            $decodedData = json_decode($municipiosResponse->body(), true);
 
-            // Intentar corregir la codificación
-            $encodings = ['UTF-8', 'ISO-8859-1', 'Windows-1252'];
-            $decodedData = null;
-
-            foreach ($encodings as $encoding) {
-                $attempt = iconv($encoding, 'UTF-8//IGNORE', $responseBody);
-                $decodedData = json_decode($attempt, true);
-                if (json_last_error() === JSON_ERROR_NONE) {
-                    break;
-                }
-            }
-
-            if ($decodedData === null) {
-                throw new \Exception('No se pudo decodificar el JSON después de intentar varias codificaciones');
-            }
-
-            // Verificar que $decodedData es un array
-            if (!is_array($decodedData)) {
-                throw new \Exception('Los datos decodificados no son un array');
-            }
-
-            // Extraer los nombres y los IDs de los municipios sin el prefijo "id"
-            $municipios = array_map(function ($municipio) {
+            return array_map(function ($municipio) {
                 $idSinPrefijo = str_replace('id', '', $municipio['id'] ?? 'ID no disponible');
                 return [
                     'id' => $idSinPrefijo,
                     'nombre' => $municipio['nombre'] ?? 'Nombre no disponible'
                 ];
             }, $decodedData);
-
-            return $municipios;
         } catch (\Exception $e) {
             return ['error' => $e->getMessage()];
         }
+    }
+
+    public function getTiempo($municipioId)
+    {
+        try {
+            $response = Http::get("{$this->tiempoApiUrl}{$municipioId}", [
+                'api_key' => $this->apiKey,
+            ]);
+
+            $data = $response->json();
+
+            if (isset($data['datos'])) {
+                $tiempoResponse = Http::get($data['datos']);
+                $tiempoData = $tiempoResponse->json();
+
+                if ($tiempoData && count($tiempoData) > 0) {
+                    $prediccion = $tiempoData[0]['prediccion']['dia'][0];
+
+                    // Extraer la probabilidad de precipitación para cada período
+                    $probPrecipitacionPorPeriodo = [
+                        "00-06" => $this->getPeriodo($prediccion, "00-06"),
+                        "06-12" => $this->getPeriodo($prediccion, "06-12"),
+                        "12-18" => $this->getPeriodo($prediccion, "12-18"),
+                        "18-24" => $this->getPeriodo($prediccion, "18-24"),
+                    ];
+
+                    return [
+                        'fecha' => $prediccion['fecha'],
+                        'temperatura_min' => $prediccion['temperatura']['minima'],
+                        'temperatura_max' => $prediccion['temperatura']['maxima'],
+                        'estado_cielo' => $this->getEstadoCielo($prediccion),
+                        'probabilidad_precipitacion' => $probPrecipitacionPorPeriodo,
+                    ];
+                }
+            }
+
+            throw new \Exception('No se pudo obtener la predicción del tiempo.');
+        } catch (\Exception $e) {
+            return ['error' => $e->getMessage()];
+        }
+    }
+
+    private function getPeriodo($prediccion, $periodo)
+    {
+        return $prediccion['probPrecipitacion'][0]['value'] ?? 0;
+    }
+
+    private function getEstadoCielo($prediccion)
+    {
+        return $prediccion['estadoCielo'][0]['descripcion'] ?? '';
     }
 }

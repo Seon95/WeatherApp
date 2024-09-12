@@ -3,6 +3,8 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\MunicipioController;
+
 use Inertia\Inertia;
 
 Route::get('/', function () {
@@ -24,7 +26,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-use App\Http\Controllers\MunicipioController;
 
 Route::get('/municipios', [MunicipioController::class, 'index']);
+Route::get('/tiempo/{municipioId}', [MunicipioController::class, 'show']);
+
 require __DIR__ . '/auth.php';

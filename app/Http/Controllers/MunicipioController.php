@@ -2,21 +2,28 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Municipio;
-use Illuminate\Http\JsonResponse;
+use App\Services\MunicipioService;
 
 class MunicipioController extends Controller
 {
-    public function index(): JsonResponse
-    {
-        try {
-            $municipios = Municipio::select('id', 'nombre')
-                ->orderBy('nombre')
-                ->get();
+    protected $municipioService;
 
-            return response()->json($municipios);
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'Error al obtener los municipios: ' . $e->getMessage()], 500);
-        }
+    public function __construct(MunicipioService $municipioService)
+    {
+        $this->municipioService = $municipioService;
+    }
+
+    // Obtener municipios
+    public function index()
+    {
+        $municipios = $this->municipioService->getMunicipios();
+        return response()->json($municipios);
+    }
+
+    // Obtener predicción del tiempo de un municipio
+    public function show($municipioId)
+    {
+        $tiempo = $this->municipioService->getTiempo($municipioId);
+        return response()->json($tiempo);
     }
 }
