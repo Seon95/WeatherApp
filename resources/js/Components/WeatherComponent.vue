@@ -1,17 +1,29 @@
+$
 <template>
     <div
-        class="bg-gradient-to-br from-blue-100 to-blue-400 min-h-screen p-8 flex flex-col items-center"
+        class="bg-gradient-to-br from-blue-200 to-indigo-500 min-h-screen py-12 px-4 sm:px-6 lg:px-8 flex flex-col items-center"
     >
-        <h1 class="text-5xl font-extrabold text-gray-800 mb-12 text-center">
-            Pronóstico del Tiempo
-        </h1>
         <div class="w-full max-w-4xl">
-            <MunicipioSelect
-                :municipios="municipios"
-                :selectedMunicipio="selectedMunicipio"
-                @municipio-selected="handleMunicipioSelected"
-            />
-            <WeatherDisplay v-if="weather" :weather="weather" />
+            <h1
+                class="text-5xl font-extrabold text-white mb-12 text-center tracking-tight"
+            >
+                Pronóstico del Tiempo
+            </h1>
+            <div
+                class="bg-white bg-opacity-20 backdrop-blur-lg rounded-3xl shadow-2xl p-8 mb-8"
+            >
+                <MunicipioSelect
+                    :municipios="municipios"
+                    :selectedMunicipio="selectedMunicipio"
+                    @municipio-selected="handleMunicipioSelected"
+                />
+                <transition name="fade" mode="out-in">
+                    <WeatherDisplay v-if="weather" :weather="weather" />
+                    <div v-else class="text-center text-white text-xl mt-8">
+                        Selecciona un municipio para ver el pronóstico
+                    </div>
+                </transition>
+            </div>
         </div>
     </div>
 </template>
@@ -38,6 +50,7 @@ export default {
 
         const handleMunicipioSelected = async (municipioId) => {
             selectedMunicipio.value = municipioId;
+            weather.value = null; // Reset weather while loading
             const weatherData = await fetchTiempo(municipioId);
             if (weatherData) {
                 weather.value = {
@@ -60,5 +73,14 @@ export default {
 </script>
 
 <style scoped>
-/* Añadir estilos adicionales si es necesario */
+.fade-enter-active,
+.fade-leave-active {
+    transition: opacity 0.5s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+    opacity: 0;
+}
 </style>
+$

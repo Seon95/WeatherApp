@@ -1,56 +1,54 @@
+$
 <template>
     <div
         v-if="weather"
-        :class="[
-            'p-6 rounded-lg shadow-xl mx-auto bg-gradient-to-br from-white to-purple-100',
-            weatherClass,
-        ]"
+        :class="['p-6 rounded-xl shadow-2xl mx-auto max-w-2xl', weatherClass]"
     >
-        <div class="flex flex-wrap items-center mb-4">
+        <div class="flex flex-wrap items-center mb-6">
             <div
-                class="flex-shrink-0 w-16 h-16 rounded-full bg-gray-200 flex items-center justify-center mr-4 mb-2"
+                class="flex-shrink-0 w-20 h-20 rounded-full bg-white bg-opacity-30 flex items-center justify-center mr-4 mb-2"
             >
-                <i :class="weatherIcon" class="text-4xl text-gray-800"></i>
+                <i :class="weatherIcon" class="text-5xl text-white"></i>
             </div>
             <div class="flex-grow min-w-0">
-                <h2 class="text-4xl font-bold text-gray-800 truncate">
+                <h2 class="text-4xl font-bold text-white truncate">
                     {{ weather.municipio }}
                 </h2>
-                <div class="text-sm text-gray-600">
+                <div class="text-sm text-white text-opacity-80">
                     {{ formatDate(weather.fecha) }}
                 </div>
             </div>
         </div>
-        <div class="text-center mb-6">
-            <span class="text-6xl font-bold text-gray-800 block">
+        <div class="text-center mb-8">
+            <span class="text-7xl font-bold text-white block">
                 {{ weather.temperatura_max }}°C
             </span>
-            <span class="text-2xl text-gray-600">
+            <span class="text-3xl text-white text-opacity-80">
                 {{ weather.temperatura_min }}°C
             </span>
         </div>
-        <div class="text-center text-gray-800 text-lg mb-4">
+        <div class="text-center text-white text-xl mb-6 font-medium">
             {{ weather.estado_cielo }}
         </div>
-        <div class="flex justify-between overflow-x-auto pb-2">
+        <div class="grid grid-cols-4 gap-4 overflow-x-auto pb-2">
             <div
                 v-for="(
                     probabilidad, periodo
                 ) in weather.probabilidad_precipitacion"
                 :key="periodo"
-                class="bg-white p-4 rounded-lg shadow-md flex flex-col items-center flex-shrink-0 w-1/4 min-w-[120px] mx-1"
+                class="bg-white bg-opacity-20 p-4 rounded-lg backdrop-blur-sm flex flex-col items-center justify-center"
             >
                 <div class="w-12 h-12 mb-2 flex items-center justify-center">
                     <i
                         :class="getIcon(periodo, probabilidad)"
-                        class="text-3xl"
+                        class="text-3xl text-white"
                     ></i>
                 </div>
-                <div class="text-gray-800 text-center">
-                    <h4 class="text-lg font-semibold">
+                <div class="text-white text-center">
+                    <h4 class="text-sm font-semibold">
                         {{ formatPeriodo(periodo) }}
                     </h4>
-                    <p class="text-xl font-bold">{{ probabilidad }}%</p>
+                    <p class="text-lg font-bold">{{ probabilidad }}%</p>
                 </div>
             </div>
         </div>
@@ -64,15 +62,25 @@ export default {
     },
     computed: {
         weatherClass() {
-            return this.weather.estado_cielo.toLowerCase().includes("lluvia")
-                ? "bg-gradient-to-br from-purple-400 to-orange-500"
-                : "bg-gradient-to-br from-pink-200 to-yellow-300";
+            const baseClasses = "bg-gradient-to-br";
+            if (this.weather.estado_cielo.toLowerCase().includes("lluvia")) {
+                return `${baseClasses} from-blue-600 to-blue-900`;
+            } else if (
+                this.weather.estado_cielo.toLowerCase().includes("nub")
+            ) {
+                return `${baseClasses} from-gray-400 to-gray-700`;
+            } else {
+                return `${baseClasses} from-sky-400 to-indigo-600`;
+            }
         },
         weatherIcon() {
             const iconMap = {
                 despejado: "fas fa-sun",
                 nuboso: "fas fa-cloud",
                 lluvia: "fas fa-cloud-rain",
+                "muy nuboso": "fas fa-cloud",
+                cubierto: "fas fa-cloud",
+                "nubes altas": "fas fa-cloud-sun",
                 // Add more mappings as needed
             };
             return (
@@ -121,33 +129,20 @@ export default {
 </script>
 
 <style scoped>
-.flex {
-    display: flex;
-    flex-wrap: nowrap;
-}
+@import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css");
 
-.overflow-x-auto {
-    overflow-x: auto;
-    scrollbar-width: thin;
-    scrollbar-color: rgba(156, 163, 175, 0.5) transparent;
-}
-
-.overflow-x-auto::-webkit-scrollbar {
-    height: 6px;
-}
-
-.overflow-x-auto::-webkit-scrollbar-track {
-    background: transparent;
-}
-
-.overflow-x-auto::-webkit-scrollbar-thumb {
-    background-color: rgba(156, 163, 175, 0.5);
-    border-radius: 20px;
+.grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
 @media (max-width: 640px) {
-    .flex > div {
-        min-width: 100px;
+    .grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
+}
+
+.backdrop-blur-sm {
+    backdrop-filter: blur(4px);
 }
 </style>
