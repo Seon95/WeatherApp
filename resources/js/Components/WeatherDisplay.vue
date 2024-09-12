@@ -41,7 +41,10 @@
                 class="bg-white p-4 rounded-lg shadow-md flex flex-col items-center flex-shrink-0 w-1/4 min-w-[120px] mx-1"
             >
                 <div class="w-12 h-12 mb-2 flex items-center justify-center">
-                    <i :class="getIcon(periodo)" class="text-3xl"></i>
+                    <i
+                        :class="getIcon(periodo, probabilidad)"
+                        class="text-3xl"
+                    ></i>
                 </div>
                 <div class="text-gray-800 text-center">
                     <h4 class="text-lg font-semibold">
@@ -97,14 +100,21 @@ export default {
             };
             return periods[periodo] || periodo;
         },
-        getIcon(periodo) {
-            const iconMap = {
-                "00-06": "fas fa-cloud-moon",
-                "06-12": "fas fa-cloud-sun",
-                "12-18": "fas fa-cloud-sun-rain",
-                "18-24": "fas fa-cloud-moon-rain",
-            };
-            return iconMap[periodo] || "fas fa-cloud";
+        getIcon(periodo, probabilidad) {
+            const hour = parseInt(periodo.split("-")[0]);
+            const isDay = hour >= 6 && hour < 18;
+
+            if (probabilidad === 0) {
+                return isDay ? "fas fa-sun" : "fas fa-moon";
+            } else if (probabilidad <= 20) {
+                return isDay ? "fas fa-cloud-sun" : "fas fa-cloud-moon";
+            } else if (probabilidad <= 50) {
+                return isDay
+                    ? "fas fa-cloud-sun-rain"
+                    : "fas fa-cloud-moon-rain";
+            } else {
+                return "fas fa-cloud-showers-heavy";
+            }
         },
     },
 };
