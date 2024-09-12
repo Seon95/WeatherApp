@@ -22,6 +22,7 @@ export async function fetchTiempo(municipioId) {
         if (data.datos) {
             const tiempoResponse = await fetch(data.datos);
             const tiempoData = await tiempoResponse.json();
+            console.log(tiempoData);
 
             if (tiempoData && tiempoData.length > 0) {
                 const prediccion = tiempoData[0].prediccion.dia[0];
