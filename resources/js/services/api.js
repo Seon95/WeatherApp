@@ -54,7 +54,7 @@ export async function fetchTiempo(municipioId) {
                     estado_cielo:
                         prediccion.estadoCielo.find(
                             (periodo) => periodo.periodo === "00-24"
-                        )?.descripcion || "No disponible",
+                        )?.descripcion || "",
                     probabilidad_precipitacion: probPrecipitacionPorPeriodo,
                 };
             }
