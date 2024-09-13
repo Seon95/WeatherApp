@@ -7,8 +7,8 @@ Este README explica los pasos para configurar y ejecutar un proyecto Laravel uti
 Para comenzar, clona el repositorio desde GitHub:
 
 ```bash
-git clone [URL_DEL_REPOSITORIO]
-cd [NOMBRE_DEL_DIRECTORIO]
+git clone https://github.com/Seon95/WeatherApp
+cd WeatherApp
 ```
 
 ## Pasos de Configuración
@@ -56,7 +56,7 @@ Este comando:
 -   Inicia todos los servicios definidos en tu archivo `docker-compose.yml`
 -   La opción `-d` ejecuta los contenedores en segundo plano
 
-### 6. Ejecutar Migraciones de la Base de Datos
+### 5. Ejecutar Migraciones de la Base de Datos
 
 ```bash
 docker-compose exec app php artisan migrate
@@ -67,7 +67,7 @@ Este comando:
 -   Ejecuta `php artisan migrate` dentro del contenedor de la aplicación
 -   Crea o actualiza las tablas de la base de datos según las migraciones definidas
 
-### 7. Obtener Datos de Municipios
+### 6. Obtener Datos de Municipios
 
 ```bash
 docker-compose exec app php artisan fetch:municipios
@@ -77,3 +77,7 @@ Este comando:
 
 -   Ejecuta un comando personalizado de Artisan (`fetch:municipios`) dentro del contenedor de la aplicación
 -   Presumiblemente, este comando obtiene y almacena datos de municipios en la base de datos
+
+### 7. Resultado
+
+Para ver el resultado, abre tu navegador y accede a http://localhost:8000.
