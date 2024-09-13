@@ -25,7 +25,6 @@ export async function fetchTiempo(municipioId) {
             if (tiempoData && tiempoData.length > 0) {
                 const prediccion = tiempoData[0].prediccion.dia[0];
 
-                // Extraer la probabilidad de precipitación para cada período
                 const probPrecipitacionPorPeriodo = {
                     "00-06":
                         prediccion.probPrecipitacion.find(

@@ -25,9 +25,6 @@ class TiempoService
             if (!$response->successful()) {
                 throw new \Exception('Error en la solicitud a la API de AEMET: ' . $response->status());
             }
-
-            // Resto del código para procesar la respuesta...
-
         } catch (\Exception $e) {
             Log::error('Error en TiempoService', [
                 'message' => $e->getMessage(),
