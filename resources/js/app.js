@@ -6,6 +6,6 @@ import HeaderComponent from "./components/HeaderComponent.vue";
 
 const app = createApp({});
 app.component("weather-component", WeatherComponent);
-app.component("header-component", HeaderComponent); // Registra el HeaderComponent
+app.component("header-component", HeaderComponent);
 
 app.mount("#app");

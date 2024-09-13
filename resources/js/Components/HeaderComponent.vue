@@ -30,6 +30,14 @@
                             >Contacto</a
                         >
                     </li>
+                    <li>
+                        <a
+                            href="/municipios"
+                            target="_blank"
+                            class="text-white hover:text-opacity-80 transition-colors duration-200"
+                            >API Municipios</a
+                        >
+                    </li>
                 </ul>
             </nav>
         </div>
