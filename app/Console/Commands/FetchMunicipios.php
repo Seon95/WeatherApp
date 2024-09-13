@@ -12,7 +12,7 @@ class FetchMunicipios extends Command
 
     public function handle(MunicipioService $municipioService)
     {
-        $municipios = $municipioService->getMunicipios();
+        $municipios = $municipioService->importMunicipiosFromAPI();
 
         if (isset($municipios['error'])) {
             $this->error($municipios['error']);

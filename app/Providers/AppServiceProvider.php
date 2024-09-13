@@ -18,7 +18,7 @@ class AppServiceProvider extends ServiceProvider
         });
 
         $this->app->singleton(MunicipioService::class, function ($app) {
-            return new MunicipioService();
+            return new MunicipioService(env('VITE_AEMET_API_KEY')); // Pasa la API key a MunicipioService
         });
     }
 

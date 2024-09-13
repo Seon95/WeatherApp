@@ -24,4 +24,19 @@ class MunicipioController extends Controller
 
         return response()->json($municipios);
     }
+
+    // Método para importar municipios desde la API
+    public function importFromAPI()
+    {
+        $municipios = $this->municipioService->importMunicipiosFromAPI();
+
+        if (isset($municipios['error'])) {
+            return response()->json($municipios, 500);
+        }
+
+        return response()->json([
+            'message' => 'Municipios importados exitosamente',
+            'data' => $municipios
+        ]);
+    }
 }
