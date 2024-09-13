@@ -2,10 +2,14 @@
 
 Este README explica los pasos para configurar y ejecutar un proyecto Laravel utilizando Docker.
 
-## Requisitos Previos
+## Clonar el Repositorio
 
--   Docker
--   Docker Compose
+Para comenzar, clona el repositorio desde GitHub:
+
+```bash
+git clone [URL_DEL_REPOSITORIO]
+cd [NOMBRE_DEL_DIRECTORIO]
+```
 
 ## Pasos de Configuración
 
@@ -37,7 +41,11 @@ Este comando:
 -   Ejecuta `npm install` para instalar las dependencias de JavaScript
 -   Elimina el contenedor después de la ejecución
 
-### 3. Iniciar los Servicios con Docker Compose
+### 3. Configurar el Archivo de Entorno
+
+Cambia el archivo `.env.example` a `.env` ,he dejado mi API_KEY ya que caduca en nada
+
+### 4. Iniciar los Servicios con Docker Compose
 
 ```bash
 docker-compose up -d
@@ -48,7 +56,7 @@ Este comando:
 -   Inicia todos los servicios definidos en tu archivo `docker-compose.yml`
 -   La opción `-d` ejecuta los contenedores en segundo plano
 
-### 4. Ejecutar Migraciones de la Base de Datos
+### 6. Ejecutar Migraciones de la Base de Datos
 
 ```bash
 docker-compose exec app php artisan migrate
@@ -59,7 +67,7 @@ Este comando:
 -   Ejecuta `php artisan migrate` dentro del contenedor de la aplicación
 -   Crea o actualiza las tablas de la base de datos según las migraciones definidas
 
-### 5. Obtener Datos de Municipios
+### 7. Obtener Datos de Municipios
 
 ```bash
 docker-compose exec app php artisan fetch:municipios
@@ -69,9 +77,3 @@ Este comando:
 
 -   Ejecuta un comando personalizado de Artisan (`fetch:municipios`) dentro del contenedor de la aplicación
 -   Presumiblemente, este comando obtiene y almacena datos de municipios en la base de datos
-
-## Notas Adicionales
-
--   Asegúrate de tener un archivo `docker-compose.yml` correctamente configurado en la raíz de tu proyecto.
--   Estos comandos asumen que tu servicio principal en Docker Compose se llama `app`. Ajusta esto si utilizas un nombre diferente.
--   Ejecuta estos comandos en el orden especificado para una configuración correcta del proyecto.
