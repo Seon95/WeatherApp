@@ -2,8 +2,9 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\Facades\Vite;
 use Illuminate\Support\ServiceProvider;
+use App\Services\TiempoService;
+use App\Services\MunicipioService;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -12,7 +13,13 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->singleton(TiempoService::class, function ($app) {
+            return new TiempoService(env('VITE_AEMET_API_KEY'));
+        });
+
+        $this->app->singleton(MunicipioService::class, function ($app) {
+            return new MunicipioService();
+        });
     }
 
     /**
@@ -20,6 +27,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Vite::prefetch(concurrency: 3);
+        //
     }
 }
