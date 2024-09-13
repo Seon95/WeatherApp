@@ -43,7 +43,7 @@ Este comando:
 
 ### 3. Configurar el Archivo de Entorno
 
-Cambia el archivo `.env.example` a `.env` ,he dejado mi API_KEY ya que caduca en nada (obten una nueva key en https://opendata.aemet.es/centrodedescargas/altaUsuario)
+Cambia el archivo `.env.example` a `.env` ,he dejado mi API_KEY ya que caduca en nada (obtén una nueva key en https://opendata.aemet.es/centrodedescargas/altaUsuario)
 
 ### 4. Iniciar los Servicios con Docker Compose
 
