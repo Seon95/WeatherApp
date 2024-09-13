@@ -1,66 +1,77 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Configuración del Proyecto Laravel con Docker
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Este README explica los pasos para configurar y ejecutar un proyecto Laravel utilizando Docker.
 
-## About Laravel
+## Requisitos Previos
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+-   Docker
+-   Docker Compose
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Pasos de Configuración
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### 1. Instalar Dependencias de Composer
 
-## Learning Laravel
+```bash
+docker run --rm -v $(pwd):/app -w /app composer install
+```
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+Este comando:
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+-   Ejecuta un contenedor Docker con Composer
+-   Monta el directorio actual (`$(pwd)`) en `/app` dentro del contenedor
+-   Establece el directorio de trabajo en `/app`
+-   Ejecuta `composer install` para instalar las dependencias de PHP
+-   Elimina el contenedor después de la ejecución (`--rm`)
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### 2. Instalar Dependencias de Node.js
 
-## Laravel Sponsors
+```bash
+docker run --rm -v $(pwd):/app -w /app node:alpine npm install
+```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+Este comando:
 
-### Premium Partners
+-   Ejecuta un contenedor Docker con Node.js (versión Alpine para un tamaño reducido)
+-   Monta el directorio actual en `/app` dentro del contenedor
+-   Establece el directorio de trabajo en `/app`
+-   Ejecuta `npm install` para instalar las dependencias de JavaScript
+-   Elimina el contenedor después de la ejecución
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+### 3. Iniciar los Servicios con Docker Compose
 
-## Contributing
+```bash
+docker-compose up -d
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Este comando:
 
-## Code of Conduct
+-   Inicia todos los servicios definidos en tu archivo `docker-compose.yml`
+-   La opción `-d` ejecuta los contenedores en segundo plano
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### 4. Ejecutar Migraciones de la Base de Datos
 
-## Security Vulnerabilities
+```bash
+docker-compose exec app php artisan migrate
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Este comando:
 
-## License
+-   Ejecuta `php artisan migrate` dentro del contenedor de la aplicación
+-   Crea o actualiza las tablas de la base de datos según las migraciones definidas
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### 5. Obtener Datos de Municipios
+
+```bash
+docker-compose exec app php artisan fetch:municipios
+```
+
+Este comando:
+
+-   Ejecuta un comando personalizado de Artisan (`fetch:municipios`) dentro del contenedor de la aplicación
+-   Presumiblemente, este comando obtiene y almacena datos de municipios en la base de datos
+
+## Notas Adicionales
+
+-   Asegúrate de tener un archivo `docker-compose.yml` correctamente configurado en la raíz de tu proyecto.
+-   Estos comandos asumen que tu servicio principal en Docker Compose se llama `app`. Ajusta esto si utilizas un nombre diferente.
+-   Ejecuta estos comandos en el orden especificado para una configuración correcta del proyecto.
