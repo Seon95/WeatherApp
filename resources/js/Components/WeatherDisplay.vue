@@ -1,4 +1,3 @@
-$
 <template>
     <div
         v-if="weather"
@@ -15,7 +14,7 @@ $
                     {{ weather.municipio }}
                 </h2>
                 <div class="text-sm text-white text-opacity-80">
-                    {{ formatDate(weather.fecha) }}
+                    {{ formatDate() }}
                 </div>
             </div>
         </div>
@@ -90,14 +89,15 @@ export default {
         },
     },
     methods: {
-        formatDate(dateString) {
+        formatDate() {
             const options = {
                 weekday: "long",
                 year: "numeric",
                 month: "long",
                 day: "numeric",
+                timeZone: "Europe/Madrid",
             };
-            return new Date(dateString).toLocaleDateString("es-ES", options);
+            return new Date().toLocaleDateString("es-ES", options);
         },
         formatPeriodo(periodo) {
             const periods = {
