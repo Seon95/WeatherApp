@@ -1,27 +1,39 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Services;
 
-use App\Services\TiempoService;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
-class TiempoController extends Controller
+class TiempoService
 {
-    protected $tiempoService;
+    protected $apiKey;
+    protected $apiUrl = 'https://opendata.aemet.es/opendata/api/prediccion/especifica/municipio/diaria/';
 
-    public function __construct(TiempoService $tiempoService)
+    public function __construct($apiKey)
     {
-        $this->tiempoService = $tiempoService;
+        $this->apiKey = $apiKey;
     }
 
-    public function show($municipioId)
+    public function fetchTiempo($municipioId)
     {
-        $tiempo = $this->tiempoService->fetchTiempo($municipioId);
+        try {
+            $url = $this->apiUrl . $municipioId . '?api_key=' . $this->apiKey;
 
-        if (isset($tiempo['error'])) {
-            return response()->json($tiempo, 500);
+            $response = Http::get($url);
+
+            if (!$response->successful()) {
+                throw new \Exception('Error en la solicitud a la API de AEMET: ' . $response->status());
+            }
+
+            // Resto del código para procesar la respuesta...
+
+        } catch (\Exception $e) {
+            Log::error('Error en TiempoService', [
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            return ['error' => $e->getMessage()];
         }
-
-        return response()->json($tiempo);
     }
 }

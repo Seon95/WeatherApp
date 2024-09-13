@@ -2,44 +2,34 @@
 
 namespace App\Services;
 
-use Illuminate\Support\Facades\Http;
+use App\Models\Municipio;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 
-class MunicipioService extends BaseApiService
+class MunicipioService
 {
-    protected $apiUrl = 'https://opendata.aemet.es/opendata/api/maestro/municipios';
-
     public function getMunicipios()
     {
         return Cache::remember('municipios', 60 * 24, function () {
             try {
-                $response = $this->get($this->apiUrl);
+                $municipios = Municipio::select('id', 'nombre')->get();
 
-                if (!isset($response['datos'])) {
-                    throw new \Exception('No se pudo obtener la URL de los datos de municipios');
+                if ($municipios->isEmpty()) {
+                    Log::warning('No se encontraron municipios en la base de datos');
                 }
 
-                $municipiosResponse = Http::get($response['datos']);
-
-                if (!$municipiosResponse->successful()) {
-                    throw new \Exception('Error al obtener los datos de municipios: ' . $municipiosResponse->status());
-                }
-
-                $municipios = $municipiosResponse->json();
-
-                return array_map(function ($municipio) {
+                return $municipios->map(function ($municipio) {
                     return [
-                        'id' => $municipio['id'],
-                        'nombre' => $municipio['nombre']
+                        'id' => $municipio->id,
+                        'nombre' => $municipio->nombre
                     ];
-                }, $municipios);
+                })->all();
             } catch (\Exception $e) {
-                Log::error('Error en MunicipioService', [
+                Log::error('Error al obtener municipios de la base de datos', [
                     'message' => $e->getMessage(),
                     'trace' => $e->getTraceAsString()
                 ]);
-                return ['error' => $e->getMessage()];
+                return ['error' => 'Error interno del servidor'];
             }
         });
     }

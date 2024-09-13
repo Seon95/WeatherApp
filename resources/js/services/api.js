@@ -1,4 +1,3 @@
-// api.js
 const API_KEY = import.meta.env.VITE_AEMET_API_KEY;
 
 export async function fetchMunicipios() {
