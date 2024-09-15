@@ -1,6 +1,8 @@
 # Configuración del Proyecto Laravel con Docker
 
-Este README explica los pasos para configurar y ejecutar un proyecto Laravel utilizando Docker.
+Este documento describe los pasos necesarios para configurar y ejecutar una aplicación meteorológica sencilla desarrollada con Laravel, Vue.js, y Tailwind CSS, todo dentro de un entorno Docker. La aplicación permite obtener el pronóstico del tiempo para distintos municipios de España, los cuales se almacenan en una base de datos local utilizando un comando de Artisan.
+
+Este enfoque modular y escalable permite una fácil integración con APIs de datos meteorológicos, y gracias a su arquitectura responsive, la aplicación se adapta perfectamente a diferentes dispositivos, garantizando una experiencia fluida tanto en móviles como en escritorio.
 
 ## Clonar el Repositorio
 
